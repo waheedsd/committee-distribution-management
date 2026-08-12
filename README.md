@@ -1,2 +1,2 @@
-# instrument-management
+# committee-distribution-management
 Manage Entity
