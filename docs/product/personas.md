@@ -11,10 +11,39 @@
 CDM(Committe Distribution Management) project consists of three roles
 1. Admin
 2. Operator
-3. User
+3. Beneficiary
 4. Super admin
+## Super Admin
+- Super Admin responsible for managing Dashboard
+### Who are they?
+- Super Admin are high level user with all permissions
+### Goals
+- Super Admin Goals are to manage users(Admin, Operator, Beneficiary) of CDM application
+### Responsibilities
+- Super Admin can create Operator and Beneficiary
+- Super Admin can deactivate Operator and Beneficiary
+- Super Admin can summary of total beneficiary participated
+- Super Admin can generate Reports
+- Super Admin can see collected total money
+
+### Pain points
+- To manage Admin and other user
+- Super Admin not able to manage beneficiary at distribution day
+- Super Admin not able to generate token
+- Super Admin not add beneficiary at ground level
+### Permissions
+- ADD_USER
+- UPDATE_USER
+- DEACTIVATE_USER
+
+### Important screens
+- Login
+- Dashboard
+- Report
+- Alerts & notification
+---
 ## Admin
-- Admin responsible for managing & monitoring of distribution and having access to add/remove user, operator
+- Admin responsible for managing & monitoring of distribution and having access to add deactivate user, operator
 ### Who are they?
 - Admin can also perform responsibities of operator and user
 ### Goals
@@ -24,9 +53,18 @@ CDM(Committe Distribution Management) project consists of three roles
 - Admin can Add/remove user or participator
 
 ### Pain points
+- To manage distribution in the absence of operator
+- Check the status of Beneficier
+- Avoid duplication beneficier
 
 ### Permissions
-- All permissons expect removing super admin user
+- OPERATOR_PERMISSIONS
+- ADD_BENEFICIARY
+- DEACTIVATE_BENEFICIARY
+- UPDATE_PRODUCT_QUANTITY
+- TOKEN_REGENERATION
+- USER_LIST
+
 ### Important screens
 - Login
 - Dashboard
@@ -51,9 +89,16 @@ CDM(Committe Distribution Management) project consists of three roles
 - Operator can update their family details
 - Operator can create a token
 ### Pain points
-
+- Handling and verifying beneficier
+- searching beneficier and updating status by verifying user token
+- updating attendence status of beneficier
 ### Permissions
-
+- UPDATE_BENEFICIARY_STATUS
+- DEACTIVATE_BENEFICIARY
+- ADD_BENEFICIARY
+- UPDATE_BENEFICIARY
+- ADD_BENEFICIARY_DETAILS
+- UPDATE_BENEFICIARY_DETAILS
 ### Important screens
 - Login
 - Dashboard
@@ -74,9 +119,11 @@ CDM(Committe Distribution Management) project consists of three roles
 ### Responsibilities
 - Beneficiary need to attend at distribution day with token details to collect distributed products/items
 ### Pain points
-
+- Beneficiary registration
+- Missing token
+- Not attending on distribution day
 ### Permissions
-- token utilizer
+- TOKEN_UTILIZER
 ### Important screens
 - token screen
 - status
