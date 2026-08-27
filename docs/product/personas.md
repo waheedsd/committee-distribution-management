@@ -1,14 +1,5 @@
-|   Time | Activity | Outcome                          |
-| -----: | -------- | -------------------------------- |
-| 15 min | Learn    | Persona vs Role vs Permission    |
-| 15 min | Practice | Define 3 users                   |
-| 25 min | Build    | `docs/product/personas.md`       |
-| 15 min | UX       | Entry screen + primary action    |
-| 10 min | Review   | Open questions + knowledge check |
-
-
 # Committee Distribution Management — Personas
-CDM(Committe Distribution Management) project consists of three roles
+CDM(Committe Distribution Management) project consists of four roles
 1. Admin
 2. Operator
 3. Beneficiary
@@ -45,12 +36,12 @@ CDM(Committe Distribution Management) project consists of three roles
 ## Admin
 - Admin responsible for managing & monitoring of distribution and having access to add deactivate user, operator
 ### Who are they?
-- Admin can also perform responsibities of operator and user
+- Admin can also perform duties of operator
 ### Goals
 - Admin Goals are to manage and monitor the distribution
 ### Responsibilities
-- Admin can create/remove a operator and user
-- Admin can Add/remove user or participator
+- Admin can create/ deactivate a operator and beneficiary
+- Admin can Add/deactivate operator and beneficiary
 
 ### Pain points
 - To manage distribution in the absence of operator
@@ -58,7 +49,7 @@ CDM(Committe Distribution Management) project consists of three roles
 - Avoid duplication beneficier
 
 ### Permissions
-- OPERATOR_PERMISSIONS
+- Inherit <OPERATOR_PERMISSIONS>
 - ADD_BENEFICIARY
 - DEACTIVATE_BENEFICIARY
 - UPDATE_PRODUCT_QUANTITY
@@ -85,7 +76,7 @@ CDM(Committe Distribution Management) project consists of three roles
 ### Goals
 - Operator goals are to collect participant infomation and register in CDM application 
 ### Responsibilities
-- Operator can add, update, delete participants
+- Operator can add, update, deactivate beneficiary
 - Operator can update their family details
 - Operator can create a token
 ### Pain points
@@ -123,7 +114,7 @@ CDM(Committe Distribution Management) project consists of three roles
 - Missing token
 - Not attending on distribution day
 ### Permissions
-- TOKEN_UTILIZER
+- TOKEN_VIEWER
 ### Important screens
 - token screen
 - status
@@ -131,8 +122,11 @@ CDM(Committe Distribution Management) project consists of three roles
 
 ## Open Questions
 
-1. 
-2.
-3.
-4.
-5.
+1. Do same admin can login to multiple devices?
+2. Do same beneficiary added to multiple families?
+3. Do operator can deactivate beneficiary?
+4. Do beneficiary need authentication?
+5. Do token helps to authenticate without log-in?
+6. Do session need to handle with expiry?
+7. Do we need password less log-in?
+8. Do we have nay screens with out authentication? 
