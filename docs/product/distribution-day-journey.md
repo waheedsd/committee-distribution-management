@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document explains about end-end journey from token distribution to beneficiray.
+This document explains about end-end journey from token distribution to beneficiary.
 Beneficiary attending to distribution day with valid token and collecting product which is mentioned in the application and with quantity and state management about happy path and unhappy path.
 
 
@@ -44,12 +44,11 @@ Input:
 - collect Beneficiary name, mobile number, if possible alternate number
 - collect No of family members
 - Automatically allocate product quantity
-- Generate token 
-- share token to benficieary 
+
 
 Action:
 
-System result: Operator visit beneficary location, collect beneficary details and generate token and share same token to benficiary
+System result: Operator visit beneficary location, collect beneficary details.
 
 UX: 
 - Collecting beneficiary deatils
@@ -61,9 +60,6 @@ UX:
 Actor: Operator
 
 Input:
-- collect Beneficiary name, mobile number, if possible alternate number
-- collect No of family members
-- Automatically allocate product quantity
 - Generate token 
 - share token to benficieary 
 
@@ -97,11 +93,11 @@ Action:
 
 System result:
 - Beneficiary shows token to operator
-- Token verfication
+- Token verification
 - collect product
 
 UX:
-- Token sync/verfication
+- Token sync/verification
 - Token status update
 ---
 
@@ -130,29 +126,34 @@ UX:
 ### Step 5 — Token / Beneficiary Identification
 - Token/ Beneficiary identy by searching in application and its status
 
+Status of token:
+INITIALIZE - Entering beneficary details but it is draft state
+ACTIVE - beneficary activated
+VERIFIED - token/beneficary verified
+COLLECTED - distribution completed
+
 ### Step 6 — Eligibility Verification
-- If token status is changed to distribution completed then beneficiary not elgible
-- If token status is still active then beneficiary is elgible.
+- If token status is not COLLECTED then beneficiary is elgible.
 
 ### Step 7 — Allocation Verification
-- Allocation verfication can be done by checking product quantity in application 
+- If token status is VERIFIED then allocation is verified.
 
 ### Step 8 — Payment / Collection
 - Optional
 - If any Beneficary or any other person interested then he can donate
 
 ### Step 9 — Distribution Confirmation
-- Distribution confirms by updating token status as of now.
+- Update token status to COLLECTED to confirm distribution
 
 ### Step 10 — Completion
-- Distrbution complete by handover product and updating token status to distribution complete
+- If token status is COLLECTED then distribution is completed.
 ---
 
 ## 5. Exceptions
 
 ### Invalid token
-If token is invalid then check with beneficiary mobile number and search in application 
-If still not exist check with Admin to take furthur action.
+If token is invalid with not VERIFIED status then check with beneficiary mobile number and search in application 
+If still not exist check with Admin to take future action.
 
 ### Missing token
 If token is missing and able to find details with mobile number then 
@@ -170,24 +171,21 @@ If token status is distribution completed then Beneficiary not allowed to take a
 ### Allocation unavailable
 
 ### Already distributed
+If token status is COLLECTED then beneficiary already received product.
 
-### Payment mismatch
-
-### Network/system failure
-In case of Network failure should update status localy
-and when network connects it should check status of db and 
-create a copy of db and update records in db 
-
-- verify any conflicts manually at initial stages and then merge to one single DB
----
 
 ## 6. End of Day
 
 ### Reconciliation
 
+
 ### Uncollected allocations
+- Reach out to beneficiary and possible distribute product and update status of token to COLLECTED
 
 ### Reporting
+- Generate a report with total token, quantity, attended on event and quantity of product distributed
+- left over quantity and no of beneficiary
+- list of beneficiary and their quantity and status with operator details
 
 ### Audit
 - log each action of operator, admin and super admin to track his actions
@@ -195,14 +193,14 @@ create a copy of db and update records in db
 
 ## 7. Open Questions
 
-1. 
-2.
-3.
-4.
-5.
+1. Beneficiary can provide same mobile number to different families but each family have a unique token number
+2. Beneficiary can absent to collect the product on distribution day
+3. Operator can enter typo mistake.
+4. Network latency
+5. token can be QR code or 5 charaters
 
 ## 8. Assumptions
 
-1.
-2.
-3.
+1. Each family have unique beneficiary
+2. updating status of token with out idempotency
+3. Allocation of product quantity should be automatic
