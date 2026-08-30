@@ -2,212 +2,283 @@
 
 ## 1. Purpose
 
-This document explains about end-end journey from token distribution to beneficiary.
-Beneficiary attending to distribution day with valid token and collecting product which is mentioned in the application and with quantity and state management about happy path and unhappy path.
+This document describes the end-to-end journey for preparing a distribution event, preparing beneficiary allocations and tokens, distributing the product on distribution day, handling exceptions, and completing end-of-day reconciliation and audit.
 
+The current MVP supports one product/item per distribution event. The journey is intentionally written at the business level so future distribution types can be supported without changing the core beneficiary, allocation, token, and distribution concepts.
 
 ## 2. Actors
 
 - Super Admin
 - Admin
 - Operator
-- Beneficiary
+- Beneficiary / family representative
 
 ## 3. Before Distribution
 
-Before starting actual distribution of product, CDM operator visits beneficiary location.
-collect the beneficiary and family details and add a record in the application.
-Generates a token and share to beneficiary by informing to bring this token on distribution day.
+Before the actual distribution day, the Operator visits beneficiary locations, collects beneficiary and family details, prepares the allocation, generates a token, and shares the token with the family representative. Any one person from the family may collect the allocated product on distribution day by presenting the family token or using the registered mobile number for lookup.
 
 ### Step 1 — Create Distribution Event
 
-Actor: Admin 
+**Actor:** Admin
 
-Input: 
-- Distribution Date, 
-- Distribution Type or product name or description, 
-- Quantity, 
-- other event details
+**Input:**
+- Distribution date
+- Distribution location
+- Expected number of beneficiaries
+- One product/item for the event
+- Product quantity
+- Other event details, if required
 
-Action: 
+**Action:** Admin creates the distribution event.
 
-System result: Event created with distribution details
+**System result:** Distribution event is created with its date, location, product and quantity details.
 
-UX: Distribution details with Product name and details, quantity, Distribution date.
+**UX:** Show distribution date, location, product/item, quantity, expected beneficiaries, and event status.
 
 ### Step 2 — Prepare Allocation
 
-Actor: Operator
+**Actor:** Operator
 
-Input: 
-- Collect Beneficiary details before distribution details.
-- collect Beneficiary name, mobile number, if possible alternate number
-- collect No of family members
-- Automatically allocate product quantity
+**Input:**
+- Beneficiary name
+- Registered mobile number
+- Optional alternate mobile number
+- Number of family members
 
+**Action:** Operator records beneficiary/family details. The system automatically calculates the product quantity according to the committee-approved allocation rule.
 
-Action:
+**System result:** Beneficiary is associated with the distribution event and receives an allocation for the event.
 
-System result: Operator visit beneficary location, collect beneficary details.
-
-UX: 
-- Collecting beneficiary deatils
-- Token generation 
-- sharing token to beneficiary
+**UX:** Beneficiary details form, family member count, calculated allocation quantity, and allocation status.
 
 ### Step 3 — Generate / Prepare Token
 
-Actor: Operator
+**Actor:** Operator / System
 
-Input:
-- Generate token 
-- share token to benficieary 
+**Input:** Beneficiary allocation.
 
-Action:
+**Action:** System generates a unique 5-character token and Operator shares it with the family representative, instructing them to bring the token on distribution day.
 
-System result: Token Generation and sharing to beneficary
+**System result:** Token is associated with the family's allocation for the distribution event.
 
-UX: 
-- Token generation 
-- sharing token to beneficiary
+**Token purpose:** The 5-character token identifies the family's allocation for a specific distribution event. For the MVP, token generation may incorporate a unique identifier and date/time information. The generation mechanism can be improved later without changing the token's business purpose.
+
+**UX:** Display the token clearly and provide an appropriate way for the Operator to share it.
+
 ---
 
 ## 4. Distribution Day
-- On Distribution day Beneficiary arrives at event location with token details
-- Verifies token 
-- collect product.
-- operator verify beneficiary token
-- update token 
-- Handover product to beneficary
+
+On distribution day, a beneficiary/family representative arrives at the event location. Any one person from the family can collect the product on behalf of the family.
 
 ### Step 4 — Beneficiary Arrives
 
-Actor: Beneficiary
+**Actor:** Beneficiary / family representative
 
-Intent: show Token and collect the product
+**Intent:** Present the token and collect the allocated product.
 
-Input:
-- beneficiary token
+**Input:**
+- 5-character token, or registered mobile number if the token is unavailable
 
-Action: 
+**Action:** Beneficiary presents the token to the Operator.
 
-System result:
-- Beneficiary shows token to operator
-- Token verification
-- collect product
+**System result:** Operator can locate the family's beneficiary, allocation, and distribution information.
 
-UX:
-- Token sync/verification
-- Token status update
----
-
-Actor: Operator
-
-Intent: Operator search beneficiary details by token number/ mobile number and check the product and quantity 
-
-Input:
-- Operator use beneficiary token details or mobile number to search  
-
-Action: 
-
-System result:
-- Operator use beneficiary token details or mobile number to search 
-- check the status
-- check the quantity 
-
-UX:
-- search beneficary using token and mobile number
-- find beneficary and token status
-- find quantity of product
----
+**UX:** Operator-facing search/identification screen.
 
 ### Step 5 — Token / Beneficiary Identification
-- After completing step 4:
-- Identify token by scan token or by searching token or beneficiary mobile details
 
+**Actor:** Operator
+
+**Action:** Operator identifies the family using either the token or registered mobile number.
+
+**System result:** System displays the matching beneficiary/family, distribution event, allocation, and relevant status.
+
+**UX:** Search by token/mobile number and display beneficiary, family, event, and allocation details.
 
 ### Step 6 — Eligibility Verification
-- After finding token check its details of allocation and find out status of beneficiary token in application 
-- Find beneficiary visiting  1st time with valid token or visiting again with expired token
+
+**Actor:** Operator + System
+
+**Rule:** Eligibility is decided separately for each distribution event by the committee. Being registered/approved does not by itself mean the beneficiary is eligible for every event.
+
+**Action:** System verifies that the beneficiary/family is eligible for the current distribution event. Operator verifies the displayed beneficiary details.
+
+**Normal identity verification:** Token or registered mobile number plus beneficiary details displayed by the system is sufficient for normal verification.
+
+**If another family member/person arrives:** Operator verifies the available beneficiary details. If additional remarks or a photo are required for an exception, they may be recorded according to committee policy.
 
 ### Step 7 — Allocation Verification
-- Allocation verified by checking family members and quatity allocated.
+
+**Actor:** Operator + System
+
+**Action:** System displays the allocation for the current event. Operator verifies the family/member details and allocated quantity before handing over the product.
+
+**System result:** Operator knows exactly what quantity is expected to be distributed.
 
 ### Step 8 — Payment / Collection
-- Optional
-- If any Beneficary or any other person interested then he can donate
+
+Distribution itself does not require payment.
+
+An optional donation can be recorded separately. Anyone may make a donation; it does not need to be associated with the beneficiary or distribution.
+
+Optional donor details:
+- Name
+- Mobile number
+- Image
+
+Donation amount is required when a donation is recorded.
 
 ### Step 9 — Distribution Confirmation
-- Confirm the distribution by handover product to beneficiary based on allocation and update same in application 
-- After updating status token get expire.
-- If token expired expected as beneficiary recevied benefits and product based on allocation.
+
+**Actor:** Operator + System
+
+**Action:** Operator hands over the product according to the verified allocation and confirms the distribution in the application.
+
+**System result:** System records the actual distribution with:
+- Distribution event
+- Beneficiary/family
+- Allocation
+- Quantity distributed
+- Operator details
+- Date and time
+
+The same allocation must not be distributed again during the same event.
+
+**Important:** Distribution completion is recorded as a distribution outcome. Token status must not be treated as the only source of truth for whether the product was actually distributed.
 
 ### Step 10 — Completion
-- Once beneficary token is update after receving product token will expire
-- In event if distibution completes with all beneficiary then overall distribution completes.
-- At the reconcilation happens between total allocation and distribution completed among beneficiary.
+
+When the distribution is confirmed, the allocation is treated as distributed and cannot be distributed again for the same event.
+
+When the event finishes, the system supports reconciliation between expected beneficiaries, allocations, actual attendance, completed distributions, remaining quantity, uncollected allocations, exceptions, and donations.
+
 ---
 
 ## 5. Exceptions
-- Operator working as field level 
-- add all beneficary and family member details
-- generating token and sharing to beneficary
-- Beneficary atteding on event with token
-- operator verify token and allocation details 
-- beneficiary receive product and update token by operator
-- Once token updated with final status token will expire and beneficiary will not use same token again
-- At the end will have summary of event with beneficary attended, product left in quantity, unattended beneficiary and their product quantity, duplicate token and invalid token
 
 ### Invalid token
-- once beneficary collected product then token gets expire
 
+If the token cannot be validated, Operator must not distribute the product using that token. Operator can use the registered mobile number to locate the beneficiary and verify the allocation where appropriate.
 
 ### Missing token
-- on searching token if beneficary is missing then token is missing
+
+If the beneficiary has lost or does not have the token, Operator can search using the registered mobile number and review the beneficiary/allocation details before proceeding according to the verification rules.
 
 ### Duplicate token
-- It is a corner case
-- Duplicate token means on search of token multiple beneficiary found
-- In case of mutiple beneficiary verify both details. 
-- In this case inform to admin and go to next beneficiary
+
+A duplicate token is a corner case where the same token appears to identify multiple beneficiaries/allocations.
+
+- Do not distribute until the conflict is resolved.
+- Operator verifies the displayed details.
+- Inform Admin for resolution.
+- Record the exception if required.
 
 ### Beneficiary not eligible
-- If token status is updated and expired then Beneficiary not allowed to take another product.
+
+If the beneficiary is not eligible for the current distribution event, the Operator must not distribute the allocated product.
+
+A previously completed allocation is also not eligible for another distribution during the same event.
 
 ### Allocation unavailable
-- If allocated product and quantity is not available then inform to Admin and find where 
+
+If the allocated product or quantity is unavailable, Operator informs Admin and follows the committee-approved shortage policy.
+
+**Pending committee decision:** Whether partial distribution is allowed and, if so, how the actual quantity should be recorded.
 
 ### Already distributed
-- If token status is updated with final state and token expire then beneficiary already received product.
 
-## 6. End of Day
-- At the end of the event or end of the day all beneficary will get allocated details.
+If the allocation has already been completed for the current event, the system must prevent another distribution and show that the allocation has already been distributed.
 
-### Reconciliation
-- No of beneficary expected to attend at event and allocated details should match at event and all beneficary need to get their benfits 
+### Network / system failure
 
-### Uncollected allocations
-- Reach out to beneficiary and possible distribute product and update status of token to COLLECTED
+If the system cannot confirm the distribution because of a network or system failure, Operator must not assume that the distribution was recorded. The final implementation must safely handle retries and prevent duplicate distribution records.
 
-### Reporting
-- Generate a report with total token, quantity, attended on event and quantity of product distributed
-- left over quantity and no of beneficiary
-- list of beneficiary and their quantity and status with operator details
+### Uncollected allocation / reallocation
 
-### Audit
-- log each action of operator, admin and super admin to track his actions
+If a beneficiary does not attend:
+1. Committee first contacts the beneficiary.
+2. If the beneficiary remains unavailable, the product may be considered for a new beneficiary according to committee policy.
+
+**Pending committee decision:**
+- Who is allowed to perform the reallocation?
+- What status should the original allocation receive?
+- How should the relationship between the original and new allocation be recorded and audited?
+
 ---
 
-## 7. Open Questions
+## 6. End of Day
 
-1. Beneficiary can provide same mobile number to different families but each family have a unique token number
-2. Beneficiary can absent to collect the product on distribution day
-3. Operator can enter typo mistake.
-4. Network latency
-5. token can be QR code or 5 charaters
+### Reconciliation
 
-## 8. Assumptions
+The event should be reconciled using at least:
 
-1. Each family have unique beneficiary
-2. Vaid Token with beneficiary on distribution day
-3. Allocation of product quantity should be automatic
+- Total beneficiaries expected
+- Total allocations
+- Total beneficiaries attended
+- Total distributions completed
+- Total quantity distributed
+- Total quantity remaining
+- Uncollected allocations/beneficiaries
+- Exceptions
+- Donations
+
+The reconciliation should make it possible to compare planned/allocated quantities with actual distributed quantities.
+
+### Uncollected allocations
+
+Identify uncollected allocations and flag them for follow-up according to committee policy. The final reallocation policy is pending committee confirmation.
+
+### Reporting
+
+Generate a summary containing:
+- Total expected beneficiaries
+- Total allocations
+- Total attended
+- Total distributed
+- Quantity distributed
+- Quantity remaining
+- Uncollected beneficiaries and allocations
+- Exceptions
+- Donation summary
+- Beneficiary/allocation status and relevant operator details
+
+### Audit
+
+The system should retain an audit trail for important actions, including:
+- Who created a beneficiary
+- Who changed family/member count
+- Who generated a token
+- Who changed an allocation
+- Who completed a distribution
+- Who performed any approved reallocation or exception resolution
+
+Distribution records should also retain the operator and date/time of the action.
+
+---
+
+## 7. Open Questions / Pending Committee Decisions
+
+1. Product shortage: Is partial distribution allowed? If yes, how is the actual quantity handled?
+2. Uncollected allocation: Who can reallocate it to a new beneficiary?
+3. Uncollected allocation: What happens to the original allocation when it is reallocated?
+4. Uncollected allocation: What audit information is required for reallocation?
+5. Future product types: Should the same beneficiary/token/allocation/distribution journey support grocery, clothing, and other distribution types? This is outside the current MVP scope.
+
+---
+
+## 8. Assumptions / Current MVP Decisions
+
+1. A distribution event has a required date and location.
+2. The MVP supports one product/item per distribution event.
+3. Eligibility is decided separately for each distribution event by the committee.
+4. One token is issued per family allocation for the event.
+5. Any one person from the family may collect the allocation.
+6. The token contains 5 characters and is used to identify the family's allocation for the event.
+7. Token generation currently incorporates unique identifier and date/time information and may be improved later.
+8. Token/mobile lookup plus displayed beneficiary details is sufficient for normal identity verification.
+9. Allocation quantity is automatically calculated using the committee-approved allocation rule.
+10. Distribution does not require payment; donations are optional and independent.
+11. Duplicate distribution of the same allocation during the same event is not allowed.
+12. Product management/selection is outside the current MVP scope.
+13. Reallocation rules are pending committee confirmation.
