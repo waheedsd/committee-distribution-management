@@ -104,11 +104,9 @@ UX:
 Actor: Operator
 
 Intent: Operator search beneficiary details by token number/ mobile number and check the product and quantity 
-handover product to beneficiary
 
 Input:
 - Operator use beneficiary token details or mobile number to search  
-- update status of token to Distribution completed
 
 Action: 
 
@@ -116,68 +114,77 @@ System result:
 - Operator use beneficiary token details or mobile number to search 
 - check the status
 - check the quantity 
-- update status of token to Distribution completed
+
 UX:
 - search beneficary using token and mobile number
 - find beneficary and token status
 - find quantity of product
-- update token after distribution completes
 ---
-### Step 5 — Token / Beneficiary Identification
-- Token/ Beneficiary identy by searching in application and its status
 
-Status of token:
-INITIALIZE - Entering beneficary details but it is draft state
-ACTIVE - beneficary activated
-VERIFIED - token/beneficary verified
-COLLECTED - distribution completed
+### Step 5 — Token / Beneficiary Identification
+- After completing step 4:
+- Identify token by scan token or by searching token or beneficiary mobile details
+
 
 ### Step 6 — Eligibility Verification
-- If token status is not COLLECTED then beneficiary is elgible.
+- After finding token check its details of allocation and find out status of beneficiary token in application 
+- Find beneficiary visiting  1st time with valid token or visiting again with expired token
 
 ### Step 7 — Allocation Verification
-- If token status is VERIFIED then allocation is verified.
+- Allocation verified by checking family members and quatity allocated.
 
 ### Step 8 — Payment / Collection
 - Optional
 - If any Beneficary or any other person interested then he can donate
 
 ### Step 9 — Distribution Confirmation
-- Update token status to COLLECTED to confirm distribution
+- Confirm the distribution by handover product to beneficiary based on allocation and update same in application 
+- After updating status token get expire.
+- If token expired expected as beneficiary recevied benefits and product based on allocation.
 
 ### Step 10 — Completion
-- If token status is COLLECTED then distribution is completed.
+- Once beneficary token is update after receving product token will expire
+- In event if distibution completes with all beneficiary then overall distribution completes.
+- At the reconcilation happens between total allocation and distribution completed among beneficiary.
 ---
 
 ## 5. Exceptions
+- Operator working as field level 
+- add all beneficary and family member details
+- generating token and sharing to beneficary
+- Beneficary atteding on event with token
+- operator verify token and allocation details 
+- beneficiary receive product and update token by operator
+- Once token updated with final status token will expire and beneficiary will not use same token again
+- At the end will have summary of event with beneficary attended, product left in quantity, unattended beneficiary and their product quantity, duplicate token and invalid token
 
 ### Invalid token
-If token is invalid with not VERIFIED status then check with beneficiary mobile number and search in application 
-If still not exist check with Admin to take future action.
+- once beneficary collected product then token gets expire
+
 
 ### Missing token
-If token is missing and able to find details with mobile number then 
-regenerate token and update its status.
+- on searching token if beneficary is missing then token is missing
 
 ### Duplicate token
-If duplicate token then verify with mobile number.
-If mobile number is different and beneficary is different.
-Deactivate one token.
-regenerate new token to another user
+- It is a corner case
+- Duplicate token means on search of token multiple beneficiary found
+- In case of mutiple beneficiary verify both details. 
+- In this case inform to admin and go to next beneficiary
 
 ### Beneficiary not eligible
-If token status is distribution completed then Beneficiary not allowed to take another product.
+- If token status is updated and expired then Beneficiary not allowed to take another product.
 
 ### Allocation unavailable
+- If allocated product and quantity is not available then inform to Admin and find where 
 
 ### Already distributed
-If token status is COLLECTED then beneficiary already received product.
-
+- If token status is updated with final state and token expire then beneficiary already received product.
 
 ## 6. End of Day
+- At the end of the event or end of the day all beneficary will get allocated details.
 
 ### Reconciliation
-
+- No of beneficary expected to attend at event and allocated details should match at event and all beneficary need to get their benfits 
 
 ### Uncollected allocations
 - Reach out to beneficiary and possible distribute product and update status of token to COLLECTED
@@ -202,5 +209,5 @@ If token status is COLLECTED then beneficiary already received product.
 ## 8. Assumptions
 
 1. Each family have unique beneficiary
-2. updating status of token with out idempotency
+2. Vaid Token with beneficiary on distribution day
 3. Allocation of product quantity should be automatic
